@@ -6,7 +6,7 @@
   <title>ALLCON - Rubber Lining & Coating Area Calculator</title>
   
   <!-- SHIELD / COATING FAVICON -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e53935'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8System.z'/></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e53935'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z'/></svg>">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -59,7 +59,7 @@
           <h1 class="text-xl font-black text-white tracking-tight flex items-center gap-2">
             Rubber Lining & Coating Area Calculator
           </h1>
-          <p class="text-xs text-zinc-400">Surface Area (m²) & Roll Consumption Verification Tool</p>
+          <p class="text-xs text-zinc-400">Surface Area (m²) Quote Verification Tool</p>
         </div>
       </div>
 
@@ -77,25 +77,16 @@
     <!-- LEFT COLUMN: INPUT PARAMETERS -->
     <div class="lg:col-span-5 space-y-6">
 
-      <!-- RUBBER ROLL SPECIFICATIONS -->
+      <!-- WASTE & OVERLAP ALLOWANCE SETUP -->
       <div class="bg-cardBg border border-cardBorder rounded-xl p-5 shadow-xl">
-        <h2 class="text-sm font-black text-allconRed uppercase tracking-wider mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-scroll"></i> 1. Rubber Roll & Overlap Setup
+        <h2 class="text-sm font-black text-allconRed uppercase tracking-wider mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-percent"></i> 1. Waste & Lap Allowance
         </h2>
 
-        <div class="grid grid-cols-3 gap-3 text-xs font-semibold">
-          <div>
-            <label class="block text-zinc-400 mb-1.5 uppercase">Roll Width (m)</label>
-            <input type="number" id="rollWidth" value="1.2" step="0.1" class="w-full p-2.5 rounded-lg border font-bold text-sm">
-          </div>
-          <div>
-            <label class="block text-zinc-400 mb-1.5 uppercase">Roll Length (m)</label>
-            <input type="number" id="rollLength" value="10" step="1" class="w-full p-2.5 rounded-lg border font-bold text-sm">
-          </div>
-          <div>
-            <label class="block text-zinc-400 mb-1.5 uppercase">Waste / Lap (%)</label>
-            <input type="number" id="wasteAllowance" value="10" step="1" class="w-full p-2.5 rounded-lg border font-bold text-sm">
-          </div>
+        <div>
+          <label class="block text-xs font-bold text-zinc-400 mb-1.5 uppercase">Trimming / Overlap Allowance (%)</label>
+          <input type="number" id="wasteAllowance" value="10" step="1" min="0" class="w-full p-2.5 rounded-lg border font-bold text-sm">
+          <span class="text-[10px] text-zinc-500 mt-1 block">Default 10% accounts for seam overlaps, flange faces, and corner radii.</span>
         </div>
       </div>
 
@@ -112,25 +103,18 @@
               <option value="cylinder">Cylinder / Pipe Shell</option>
               <option value="cone">Conical Reducer / Hopper</option>
               <option value="box">Rectangular Tank / Chute</option>
-              <option value="flat">Flat Plate / Flange Ring</option>
+              <option value="flat">Flat Plate / Flange Face</option>
             </select>
           </div>
 
           <div>
             <label class="block text-zinc-400 mb-1.5 uppercase">Description / Tag</label>
-            <input type="text" id="partTag" placeholder="e.g. Tank Shell, Cone Hopper" class="w-full p-2.5 rounded-lg border text-sm">
+            <input type="text" id="partTag" placeholder="e.g. Tank Shell, Pipe Spool 01" class="w-full p-2.5 rounded-lg border text-sm">
           </div>
 
           <!-- DYNAMIC INPUT FIELDS -->
           <div id="shapeFieldsContainer" class="grid grid-cols-2 gap-3 pt-1">
             <!-- Dynamic fields loaded by JS -->
-          </div>
-
-          <div class="pt-2">
-            <label class="flex items-center gap-2 text-zinc-300 font-bold cursor-pointer select-none">
-              <input type="checkbox" id="includeEnds" class="w-4 h-4 accent-allconRed rounded">
-              Include End Caps / Top & Bottom Plates
-            </label>
           </div>
 
           <button onclick="addComponentRow()" class="w-full mt-3 bg-allconRed hover:bg-allconRedHover text-white font-black py-3 rounded-lg text-sm shadow-lg transition uppercase tracking-wider flex items-center justify-center gap-2">
@@ -149,25 +133,25 @@
         <div class="bg-cardBg border border-cardBorder p-4 rounded-xl text-center">
           <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Net Surface Area</div>
           <div class="text-2xl font-black text-white" id="resNetArea">0.00 m²</div>
-          <div class="text-[10px] text-zinc-400 mt-1">Exact geometry</div>
+          <div class="text-[10px] text-zinc-400 mt-1">Exact drawing geometry</div>
         </div>
 
         <div class="bg-cardBg border border-cardBorder p-4 rounded-xl text-center">
-          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Required Area</div>
+          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Quoted Area</div>
           <div class="text-2xl font-black text-emerald-400" id="resGrossArea">0.00 m²</div>
-          <div class="text-[10px] text-zinc-400 mt-1" id="resWasteLabel">Incl. 10% Waste</div>
+          <div class="text-[10px] text-zinc-400 mt-1" id="resWasteLabel">Incl. 10% Allowance</div>
         </div>
 
         <div class="bg-cardBg border border-cardBorder p-4 rounded-xl text-center">
-          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Rolls Required</div>
-          <div class="text-3xl font-black text-allconRed" id="resRollsCount">0</div>
-          <div class="text-[10px] text-zinc-400 mt-1" id="resRollSpecsLabel">12m² per roll</div>
+          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Waste Allowance</div>
+          <div class="text-2xl font-black text-allconRed" id="resWasteArea">0.00 m²</div>
+          <div class="text-[10px] text-zinc-400 mt-1" id="resWastePercentLabel">10% added</div>
         </div>
 
         <div class="bg-cardBg border border-cardBorder p-4 rounded-xl text-center">
-          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Est. Rubber Weight</div>
+          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Est. Rubber Mass</div>
           <div class="text-2xl font-black text-white" id="resEstWeight">0.0 kg</div>
-          <div class="text-[10px] text-zinc-400 mt-1">@ 6mm thickness</div>
+          <div class="text-[10px] text-zinc-400 mt-1">@ 6mm rubber</div>
         </div>
       </div>
 
@@ -205,19 +189,17 @@
 
   <script>
     let components = [
-      { shape: 'cylinder', tag: 'Main Tank Shell', d1: 1800, d2: 0, length: 3000, qty: 1, includeEnds: true, netArea: 22.05 }
+      { shape: 'cylinder', tag: 'Pipe Spool / Shell', d1: 1800, d2: 0, length: 3000, qty: 1, netArea: 16.96 }
     ];
 
     function toggleShapeInputs() {
       const type = document.getElementById('shapeType').value;
       const container = document.getElementById('shapeFieldsContainer');
-      const endsWrapper = document.getElementById('includeEnds').parentElement.parentElement;
 
       if (type === 'cylinder') {
-        endsWrapper.style.display = 'block';
         container.innerHTML = `
           <div>
-            <label class="block text-zinc-400 mb-1 uppercase">Diameter (mm)</label>
+            <label class="block text-zinc-400 mb-1 uppercase">Inside Dia / ID (mm)</label>
             <input type="number" id="inpD1" value="1800" class="w-full p-2 rounded text-xs font-bold">
           </div>
           <div>
@@ -230,14 +212,13 @@
           </div>
         `;
       } else if (type === 'cone') {
-        endsWrapper.style.display = 'none';
         container.innerHTML = `
           <div>
-            <label class="block text-zinc-400 mb-1 uppercase">Large Dia (mm)</label>
+            <label class="block text-zinc-400 mb-1 uppercase">Large ID (mm)</label>
             <input type="number" id="inpD1" value="1800" class="w-full p-2 rounded text-xs font-bold">
           </div>
           <div>
-            <label class="block text-zinc-400 mb-1 uppercase">Small Dia (mm)</label>
+            <label class="block text-zinc-400 mb-1 uppercase">Small ID (mm)</label>
             <input type="number" id="inpD2" value="800" class="w-full p-2 rounded text-xs font-bold">
           </div>
           <div>
@@ -250,7 +231,6 @@
           </div>
         `;
       } else if (type === 'box') {
-        endsWrapper.style.display = 'none';
         container.innerHTML = `
           <div>
             <label class="block text-zinc-400 mb-1 uppercase">Length (mm)</label>
@@ -270,7 +250,6 @@
           </div>
         `;
       } else if (type === 'flat') {
-        endsWrapper.style.display = 'none';
         container.innerHTML = `
           <div>
             <label class="block text-zinc-400 mb-1 uppercase">Length / Outer Dia (mm)</label>
@@ -288,29 +267,25 @@
       }
     }
 
-    function calculateSurfaceArea(shape, d1, d2, length, includeEnds) {
+    function calculateSurfaceArea(shape, d1, d2, length) {
       let singleAreaM2 = 0;
 
       if (shape === 'cylinder') {
         const radiusM = (d1 / 2) / 1000;
         const lengthM = length / 1000;
-        // Shell Area = 2 * PI * r * h
+        // Internal Cylinder Shell Area = 2 * PI * r * h
         singleAreaM2 = 2 * Math.PI * radiusM * lengthM;
-        if (includeEnds) {
-          // 2 * End Plates Area = 2 * (PI * r^2)
-          singleAreaM2 += 2 * (Math.PI * Math.pow(radiusM, 2));
-        }
       } else if (shape === 'cone') {
         const r1M = (d1 / 2) / 1000;
         const r2M = (d2 / 2) / 1000;
         const slantM = length / 1000;
-        // Frustum Area = PI * (r1 + r2) * slant
+        // Cone Frustum Area = PI * (r1 + r2) * slant
         singleAreaM2 = Math.PI * (r1M + r2M) * slantM;
       } else if (shape === 'box') {
         const lM = d1 / 1000;
         const wM = d2 / 1000;
         const hM = length / 1000;
-        // Open top box internal lining = Base + 2*(L*H) + 2*(W*H)
+        // Open box internal lining = Base + 2*(L*H) + 2*(W*H)
         singleAreaM2 = (lM * wM) + 2 * (lM * hM) + 2 * (wM * hM);
       } else if (shape === 'flat') {
         const lM = d1 / 1000;
@@ -328,12 +303,11 @@
       const d2 = parseFloat(document.getElementById('inpD2')?.value) || 0;
       const length = parseFloat(document.getElementById('inpLength')?.value) || 0;
       const qty = parseInt(document.getElementById('inpQty')?.value) || 1;
-      const includeEnds = document.getElementById('includeEnds').checked;
 
-      const singleArea = calculateSurfaceArea(shape, d1, d2, length, includeEnds);
+      const singleArea = calculateSurfaceArea(shape, d1, d2, length);
       const netArea = singleArea * qty;
 
-      components.push({ shape, tag, d1, d2, length, qty, includeEnds, netArea });
+      components.push({ shape, tag, d1, d2, length, qty, netArea });
       document.getElementById('partTag').value = '';
       calculateAll();
     }
@@ -344,26 +318,22 @@
     }
 
     function calculateAll() {
-      const rollW = parseFloat(document.getElementById('rollWidth').value) || 1.2;
-      const rollL = parseFloat(document.getElementById('rollLength').value) || 10;
       const wastePct = parseFloat(document.getElementById('wasteAllowance').value) || 10;
 
-      const rollAreaM2 = rollW * rollL;
-
       const totalNetM2 = components.reduce((sum, item) => sum + item.netArea, 0);
-      const totalGrossM2 = totalNetM2 * (1 + (wastePct / 100));
-      const rollsCount = rollAreaM2 > 0 ? Math.ceil(totalGrossM2 / rollAreaM2) : 0;
+      const totalWasteM2 = totalNetM2 * (wastePct / 100);
+      const totalGrossM2 = totalNetM2 + totalWasteM2;
       
-      // Weight estimation based on standard 6mm rubber density ~ 1.2 g/cm3 -> 7.2 kg/m2
+      // Rubber weight estimate @ 6mm thickness ~ 7.2 kg/m2
       const estWeightKg = totalGrossM2 * 7.2;
 
       // Update UI
       document.getElementById('resNetArea').innerText = `${totalNetM2.toFixed(2)} m²`;
       document.getElementById('resGrossArea').innerText = `${totalGrossM2.toFixed(2)} m²`;
-      document.getElementById('resWasteLabel').innerText = `Incl. ${wastePct}% Waste/Lap`;
+      document.getElementById('resWasteLabel').innerText = `Incl. ${wastePct}% Allowance`;
 
-      document.getElementById('resRollsCount').innerText = rollsCount;
-      document.getElementById('resRollSpecsLabel').innerText = `${rollAreaM2.toFixed(1)}m² per roll`;
+      document.getElementById('resWasteArea').innerText = `${totalWasteM2.toFixed(2)} m²`;
+      document.getElementById('resWastePercentLabel').innerText = `${wastePct}% added`;
 
       document.getElementById('resEstWeight').innerText = `${estWeightKg.toFixed(1)} kg`;
 
@@ -404,9 +374,7 @@
       toggleShapeInputs();
       calculateAll();
 
-      ['rollWidth', 'rollLength', 'wasteAllowance'].forEach(id => {
-        document.getElementById(id).addEventListener('input', calculateAll);
-      });
+      document.getElementById('wasteAllowance').addEventListener('input', calculateAll);
     });
   </script>
 </body>
