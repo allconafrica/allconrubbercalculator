@@ -74,26 +74,13 @@
   <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto px-6 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-    <!-- LEFT COLUMN: INPUT PARAMETERS -->
+    <!-- LEFT COLUMN: INPUT FORM -->
     <div class="lg:col-span-5 space-y-6">
 
-      <!-- WASTE & OVERLAP ALLOWANCE SETUP -->
-      <div class="bg-cardBg border border-cardBorder rounded-xl p-5 shadow-xl">
-        <h2 class="text-sm font-black text-allconRed uppercase tracking-wider mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-percent"></i> 1. Waste & Lap Allowance
-        </h2>
-
-        <div>
-          <label class="block text-xs font-bold text-zinc-400 mb-1.5 uppercase">Trimming / Overlap Allowance (%)</label>
-          <input type="number" id="wasteAllowance" value="10" step="1" min="0" class="w-full p-2.5 rounded-lg border font-bold text-sm">
-          <span class="text-[10px] text-zinc-500 mt-1 block">Default 10% accounts for seam overlaps, flange faces, and corner radii.</span>
-        </div>
-      </div>
-
-      <!-- GEOMETRY SECTION ADDITION -->
+      <!-- GEOMETRY INPUT CARD -->
       <div class="bg-cardBg border border-cardBorder rounded-xl p-5 shadow-xl">
         <h2 class="text-sm font-black text-allconRed uppercase tracking-wider mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-shapes"></i> 2. Add Component Surface
+          <i class="fa-solid fa-shapes"></i> Add Component Surface
         </h2>
 
         <div class="space-y-4 text-xs font-semibold">
@@ -129,29 +116,23 @@
     <div class="lg:col-span-7 space-y-6">
 
       <!-- SUMMARY METRICS -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="bg-cardBg border border-cardBorder p-4 rounded-xl text-center">
-          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Net Surface Area</div>
-          <div class="text-2xl font-black text-white" id="resNetArea">0.00 m²</div>
+          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Surface Area</div>
+          <div class="text-3xl font-black text-emerald-400" id="resNetArea">0.00 m²</div>
           <div class="text-[10px] text-zinc-400 mt-1">Exact drawing geometry</div>
         </div>
 
         <div class="bg-cardBg border border-cardBorder p-4 rounded-xl text-center">
-          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Quoted Area</div>
-          <div class="text-2xl font-black text-emerald-400" id="resGrossArea">0.00 m²</div>
-          <div class="text-[10px] text-zinc-400 mt-1" id="resWasteLabel">Incl. 10% Allowance</div>
+          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Components</div>
+          <div class="text-3xl font-black text-white" id="resItemCount">0</div>
+          <div class="text-[10px] text-zinc-400 mt-1">Lined surfaces</div>
         </div>
 
         <div class="bg-cardBg border border-cardBorder p-4 rounded-xl text-center">
-          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Waste Allowance</div>
-          <div class="text-2xl font-black text-allconRed" id="resWasteArea">0.00 m²</div>
-          <div class="text-[10px] text-zinc-400 mt-1" id="resWastePercentLabel">10% added</div>
-        </div>
-
-        <div class="bg-cardBg border border-cardBorder p-4 rounded-xl text-center">
-          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Est. Rubber Mass</div>
-          <div class="text-2xl font-black text-white" id="resEstWeight">0.0 kg</div>
-          <div class="text-[10px] text-zinc-400 mt-1">@ 6mm rubber</div>
+          <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Est. Material Mass</div>
+          <div class="text-3xl font-black text-white" id="resEstWeight">0.0 kg</div>
+          <div class="text-[10px] text-zinc-400 mt-1">@ 6mm thickness</div>
         </div>
       </div>
 
@@ -169,7 +150,7 @@
           <div class="col-span-4">TAG / SHAPE</div>
           <div class="col-span-3">DIMENSIONS (MM)</div>
           <div class="col-span-2 text-center">QTY</div>
-          <div class="col-span-2 text-right">NET M²</div>
+          <div class="col-span-2 text-right">TOTAL M²</div>
           <div class="col-span-1 text-right"></div>
         </div>
 
@@ -318,23 +299,12 @@
     }
 
     function calculateAll() {
-      const wastePct = parseFloat(document.getElementById('wasteAllowance').value) || 10;
-
       const totalNetM2 = components.reduce((sum, item) => sum + item.netArea, 0);
-      const totalWasteM2 = totalNetM2 * (wastePct / 100);
-      const totalGrossM2 = totalNetM2 + totalWasteM2;
-      
-      // Rubber weight estimate @ 6mm thickness ~ 7.2 kg/m2
-      const estWeightKg = totalGrossM2 * 7.2;
+      const estWeightKg = totalNetM2 * 7.2;
 
       // Update UI
       document.getElementById('resNetArea').innerText = `${totalNetM2.toFixed(2)} m²`;
-      document.getElementById('resGrossArea').innerText = `${totalGrossM2.toFixed(2)} m²`;
-      document.getElementById('resWasteLabel').innerText = `Incl. ${wastePct}% Allowance`;
-
-      document.getElementById('resWasteArea').innerText = `${totalWasteM2.toFixed(2)} m²`;
-      document.getElementById('resWastePercentLabel').innerText = `${wastePct}% added`;
-
+      document.getElementById('resItemCount').innerText = components.length;
       document.getElementById('resEstWeight').innerText = `${estWeightKg.toFixed(1)} kg`;
 
       document.getElementById('componentCountLabel').innerText = `${components.length} Component${components.length === 1 ? '' : 's'}`;
@@ -373,8 +343,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       toggleShapeInputs();
       calculateAll();
-
-      document.getElementById('wasteAllowance').addEventListener('input', calculateAll);
     });
   </script>
 </body>
